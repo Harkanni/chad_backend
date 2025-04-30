@@ -3,6 +3,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { createRouteHandler } from "uploadthing/express"
 import { uploadRouter } from './services/uploadthing.services';
+import { clerkMiddleware } from '@clerk/express'
 import cors from 'cors'
 
 dotenv.config();
@@ -11,6 +12,7 @@ const app = express();
 
 // CORS Setup
 app.use(cors());
+app.use(clerkMiddleware())
 
 // Manually set Access-Control headers if needed
 app.use((req, res, next) => {
@@ -34,7 +36,7 @@ app.get("/api", (req, res) => {
 app.use("/api/uploadthing", createRouteHandler({
    router: uploadRouter,
    config: {
-      callbackUrl: "https://5d01-197-211-63-125.ngrok-free.app/api/uploadthing",
+      callbackUrl: "https://96b0-197-211-63-170.ngrok-free.app/api/uploadthing",
       token: "eyJhcGlLZXkiOiJza19saXZlXzZhMzAwNDE1ODkyNGJhMmMzYTNhYmVlN2E3ZWJkMWE0YTI1ZjZjNGJiMjk3ZjAyOTkzYWM1NTg0NjI0MzlmMDQiLCJhcHBJZCI6Imt5bHdnZnp1Z2YiLCJyZWdpb25zIjpbInNlYTEiXX0="
    },
 }),
