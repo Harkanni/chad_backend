@@ -1,7 +1,6 @@
 /*
 import { db } from "@/db";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
-import { UploadThingError } from "uploadthing/server";
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { pc } from "@/lib/pinecone";
 import { PineconeStore } from "@langchain/pinecone";
@@ -10,7 +9,11 @@ import { HuggingFaceInferenceEmbeddings } from '@langchain/community/embeddings/
 import { currentUser } from "@clerk/nextjs/server"; 
 */
 
+import { UploadThingError } from "uploadthing/server";
+import type { Request } from "express";
 import { createUploadthing, type FileRouter } from "uploadthing/express";
+import { clerkClient, getAuth } from "@clerk/express";
+import { db } from "../db/client";
 
 const f = createUploadthing();
 
@@ -26,6 +29,49 @@ export const uploadRouter = {
          maxFileCount: 1,
       },
    })
+      // .middleware(async ({ req }: { req: Request }) => {
+      //    console.log("🛠️ Running UploadThing Middleware...");
+
+      //    // Get the `userId` from the `Auth` object
+      //    // Use `getAuth()` to get the user's `userId`
+      //    console.log("header:...", req.headers.authorization)
+      //    const { userId } = getAuth(req)
+      //    console.log(userId)
+
+      //    // If user isn't authenticated, return a 401 error
+      //    if (!userId) {
+      //       console.error("❌ Unauthorized upload attempt");
+      //       throw new UploadThingError("Unauthorized. No user.");
+      //    }
+
+
+      //    // const userId = req.auth?.userId; // populated by Clerk middleware
+      //    const user = await clerkClient.users.getUser(userId)
+
+
+      //    console.log("✅ Authenticated user:", userId);
+
+      //    return { authUserId: userId };
+      // })
+      .middleware(async ({ req }: { req: Request }) => {
+         console.log("🛠️ Running UploadThing Middleware...");
+
+         // Get the `userId`
+         let userId = req.headers['x-user-id']; // Header names are lowercase
+         console.log('User ID:', userId);
+
+         if (!userId) {
+            console.error("❌ Unauthorized upload attempt");
+            throw new UploadThingError("Unauthorized. No user.");
+         }
+
+         userId = (userId as string) // casting as string
+         // const user = await clerkClient.users.getUser(userId)
+
+         // console.log("THIS SHOULD BE THE USER OBJECT: ", user)
+
+         return { authUserId: userId };
+      })
       .onUploadComplete(async ({ metadata, file }) => {
 
          console.log("✅ UploadThing onUploadComplete triggered.");
@@ -33,7 +79,7 @@ export const uploadRouter = {
          console.log("File URL:", file.url);
          console.log("✅ FILE WEB HOOK RESPONSE: ", file)
 
-         /*
+         
          var createdFile = await db.file.create({
             data: {
                key: file.key,
@@ -43,7 +89,7 @@ export const uploadRouter = {
                url: `https://kylwgfzugf.ufs.sh/f/${file.key}`,
                uploadStatus: "PROCESSING"
             }
-         }); */
+         });
 
          console.log("✅ File successfully stored in database.");
 
