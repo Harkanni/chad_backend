@@ -1,13 +1,13 @@
-/*
-import { db } from "@/db";
-import { createUploadthing, type FileRouter } from "uploadthing/next";
+
+// import { db } from "@/db";
+// import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
-import { pc } from "@/lib/pinecone";
+import { pc } from "./pinecone";
 import { PineconeStore } from "@langchain/pinecone";
+import { Pinecone as PineconeClient } from "@pinecone-database/pinecone";
 // import { TransformersEmbeddings } from 'langchain/embeddings/hf';
 import { HuggingFaceInferenceEmbeddings } from '@langchain/community/embeddings/hf';
-import { currentUser } from "@clerk/nextjs/server"; 
-*/
+
 
 import { UploadThingError } from "uploadthing/server";
 import type { Request } from "express";
@@ -29,30 +29,6 @@ export const uploadRouter = {
          maxFileCount: 1,
       },
    })
-      // .middleware(async ({ req }: { req: Request }) => {
-      //    console.log("🛠️ Running UploadThing Middleware...");
-
-      //    // Get the `userId` from the `Auth` object
-      //    // Use `getAuth()` to get the user's `userId`
-      //    console.log("header:...", req.headers.authorization)
-      //    const { userId } = getAuth(req)
-      //    console.log(userId)
-
-      //    // If user isn't authenticated, return a 401 error
-      //    if (!userId) {
-      //       console.error("❌ Unauthorized upload attempt");
-      //       throw new UploadThingError("Unauthorized. No user.");
-      //    }
-
-
-      //    // const userId = req.auth?.userId; // populated by Clerk middleware
-      //    const user = await clerkClient.users.getUser(userId)
-
-
-      //    console.log("✅ Authenticated user:", userId);
-
-      //    return { authUserId: userId };
-      // })
       .middleware(async ({ req }: { req: Request }) => {
          console.log("🛠️ Running UploadThing Middleware...");
 
@@ -94,7 +70,7 @@ export const uploadRouter = {
          console.log("✅ File successfully stored in database.");
 
 
-         /*
+         
          try {
             // const response = await fetch(`https://utfs.io/f/${file.key}`)
             const response = await fetch(`https://kylwgfzugf.ufs.sh/f/${file.key}`)
@@ -106,8 +82,10 @@ export const uploadRouter = {
 
             // const pagesAmt = pageLevelDocs.length;
 
-            // vectorize and index entire document
-            const pineconeIndex = pc.Index(process.env.PINECONE_INDEX!)
+            // vectorize and index entire document    
+            const pinecone = new PineconeClient();
+            const pineconeIndex = pinecone.Index(process.env.PINECONE_INDEX!);
+            // const pineconeIndex = pc.Index(process.env.PINECONE_INDEX!)
 
             // const embeddings = new OpenAIEmbeddings({
             //    // openAIApiKey: process.env.OPEN_AI_API_KEY,
@@ -143,7 +121,7 @@ export const uploadRouter = {
                   id: createdFile.id
                }
             })
-         } */
+         } 
 
          return { foo: "bar", bazz: "ruq" }
          // return { uploadedBy: metadata.authUserId };

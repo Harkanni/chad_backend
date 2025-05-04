@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { createRouteHandler } from "uploadthing/express"
 import { uploadRouter } from './services/uploadthing.services';
 import { clerkMiddleware, } from '@clerk/express'
+import messageRouter from "./routes/messages.routes";
 import cors from 'cors'
 
 dotenv.config();
@@ -32,6 +33,8 @@ app.use(clerkMiddleware({
 }))
 // app.use(requireAuth())
 
+
+app.use("/api", messageRouter);
 
 app.get("/api", (req, res) => {
    res.send("Hello from Express!");
