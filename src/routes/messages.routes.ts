@@ -91,7 +91,8 @@ router.post("/message", requireAuth, async (req, res) => {
       }))
 
       const response = await hf.textGeneration({
-         model: "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+         // model: "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+         model: "openchat/openchat-3.6-8b-20240522",
          inputs: generatePrompts(formattedPrevMessages, results, message),
          parameters: {
             max_new_tokens: 150,

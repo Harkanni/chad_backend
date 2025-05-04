@@ -44,7 +44,7 @@ app.get("/api", (req, res) => {
 app.use("/api/uploadthing", createRouteHandler({
    router: uploadRouter,
    config: {
-      callbackUrl: "https://d32c-197-211-57-19.ngrok-free.app/api/uploadthing",
+      callbackUrl: "https://f0d0-197-211-63-72.ngrok-free.app/api/uploadthing",
       token: "eyJhcGlLZXkiOiJza19saXZlXzZhMzAwNDE1ODkyNGJhMmMzYTNhYmVlN2E3ZWJkMWE0YTI1ZjZjNGJiMjk3ZjAyOTkzYWM1NTg0NjI0MzlmMDQiLCJhcHBJZCI6Imt5bHdnZnp1Z2YiLCJyZWdpb25zIjpbInNlYTEiXX0="
 
    },

@@ -28,6 +28,11 @@ export const uploadRouter = {
          maxFileSize: "4MB",
          maxFileCount: 1,
       },
+
+      audio: {
+         maxFileSize: "8MB",
+         maxFileCount: 1,
+      }
    })
       .middleware(async ({ req }: { req: Request }) => {
          console.log("🛠️ Running UploadThing Middleware...");
